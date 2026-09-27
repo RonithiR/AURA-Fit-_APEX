@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CustomElixir.h"
+
 namespace ZenBarApp {
 
 	using namespace System;
@@ -36,7 +38,7 @@ namespace ZenBarApp {
 		}
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Button^ btnOrders;
-	private: System::Windows::Forms::Button^ button1;
+
 	private: System::Windows::Forms::Button^ btnBookings;
 	private: System::Windows::Forms::Button^ btnExit;
 
@@ -58,7 +60,6 @@ namespace ZenBarApp {
 		{
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->btnOrders = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->btnBookings = (gcnew System::Windows::Forms::Button());
 			this->btnExit = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
@@ -69,7 +70,7 @@ namespace ZenBarApp {
 			this->label1->Location = System::Drawing::Point(17, 9);
 			this->label1->Margin = System::Windows::Forms::Padding(8, 0, 8, 0);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(262, 46);
+			this->label1->Size = System::Drawing::Size(255, 45);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Zen Dashboard";
 			this->label1->Click += gcnew System::EventHandler(this, &MyForm::label1_Click);
@@ -89,21 +90,6 @@ namespace ZenBarApp {
 			this->btnOrders->Text = L"Orders";
 			this->btnOrders->UseVisualStyleBackColor = false;
 			this->btnOrders->Click += gcnew System::EventHandler(this, &MyForm::btnOrders_Click);
-			// 
-			// button1
-			// 
-			this->button1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(88)), static_cast<System::Int32>(static_cast<System::Byte>(129)),
-				static_cast<System::Int32>(static_cast<System::Byte>(87)));
-			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->button1->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->button1->ForeColor = System::Drawing::Color::White;
-			this->button1->Location = System::Drawing::Point(887, 505);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(150, 45);
-			this->button1->TabIndex = 2;
-			this->button1->Text = L"Orders";
-			this->button1->UseVisualStyleBackColor = false;
 			// 
 			// btnBookings
 			// 
@@ -144,12 +130,11 @@ namespace ZenBarApp {
 			this->ClientSize = System::Drawing::Size(1924, 1055);
 			this->Controls->Add(this->btnExit);
 			this->Controls->Add(this->btnBookings);
-			this->Controls->Add(this->button1);
 			this->Controls->Add(this->btnOrders);
 			this->Controls->Add(this->label1);
 			this->Font = (gcnew System::Drawing::Font(L"Segoe UI", 19.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->Margin = System::Windows::Forms::Padding(8, 8, 8, 8);
+			this->Margin = System::Windows::Forms::Padding(8);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
 			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
