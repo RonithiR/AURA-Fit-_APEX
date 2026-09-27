@@ -1,2 +1,2 @@
-# AURA-Fit-_APEX
+# ZENBar-APEX
 A virtual gym program software developed by TEAM APEX
