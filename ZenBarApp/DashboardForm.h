@@ -74,6 +74,9 @@ namespace ZenBarApp {
 		TextBox^ txtOrderCust;
 		ComboBox^ cmbOrderDrink;
 		ComboBox^ cmbClass;
+		TextBox^ txtBookingCust;
+		DataGridView^ bookingsGrid;
+		DateTimePicker^ dtpBookingTime;
 		DataGridView^ ordersGrid;
 
 		System::ComponentModel::Container^ components;
@@ -255,6 +258,113 @@ namespace ZenBarApp {
 			MessageBox::Show("Order added successfully!", "ZenBar", MessageBoxButtons::OK, MessageBoxIcon::Information);
 			txtOrderCust->Text = "";
 			LoadOrdersView(); // refresh the page to show the new row
+		}
+
+		void BtnDeleteOrder_Click(Object^ sender, EventArgs^ e) {
+			if (ordersGrid->SelectedRows->Count == 0) {
+				MessageBox::Show("Please select an order to delete.", "Nothing Selected", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
+			}
+
+			String^ orderId = ordersGrid->SelectedRows[0]->Cells[0]->Value->ToString();
+			String^ sql = "DELETE FROM orders WHERE order_id = " + orderId;
+			RunNonQuery(sql);
+
+			MessageBox::Show("Order deleted.", "ZenBar", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			LoadOrdersView();
+		}
+
+		void BtnUpdateOrder_Click(Object^ sender, EventArgs^ e) {
+			if (ordersGrid->SelectedRows->Count == 0) {
+				MessageBox::Show("Please select an order to update.", "Nothing Selected", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
+			}
+			if (cmbOrderDrink->SelectedIndex == -1) {
+				MessageBox::Show("Please select a new drink from the dropdown.", "Missing Info", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
+			}
+
+			String^ orderId = ordersGrid->SelectedRows[0]->Cells[0]->Value->ToString();
+			String^ selected = cmbOrderDrink->SelectedItem->ToString();
+
+			int parenIndex = selected->IndexOf("(Rs. ");
+			String^ drinkName = selected->Substring(0, parenIndex)->Trim();
+			String^ priceText = selected->Substring(parenIndex + 5)->Replace(")", "")->Trim();
+			double price = Double::Parse(priceText);
+
+			String^ sql = "UPDATE orders SET drink_name = '" + drinkName->Replace("'", "''") +
+				"', price = " + price.ToString() + " WHERE order_id = " + orderId;
+
+			RunNonQuery(sql);
+
+			MessageBox::Show("Order updated.", "ZenBar", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			LoadOrdersView();
+		}
+
+		void BtnAddBooking_Click(Object^ sender, EventArgs^ e) {
+			if (txtBookingCust->Text == "" || cmbClass->SelectedIndex == -1) {
+				MessageBox::Show("Please enter a customer name and select a package.", "Missing Info", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
+			}
+
+			String^ custName = txtBookingCust->Text;
+			String^ selected = cmbClass->SelectedItem->ToString();
+
+			int parenIndex = selected->IndexOf("(Rs.");
+			String^ className = selected->Substring(0, parenIndex)->Trim();
+			String^ sessionTime = dtpBookingTime->Value.ToString("ddd, hh:mm tt");
+
+			String^ sql = "INSERT INTO sessions (customer_name, class_type, session_time) VALUES ('" +
+				custName->Replace("'", "''") + "', '" +
+				className->Replace("'", "''") + "', '" +
+				sessionTime->Replace("'", "''") + "')";
+
+			RunNonQuery(sql);
+
+			MessageBox::Show("Booking added successfully!", "ZenBar", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			txtBookingCust->Text = "";
+			LoadBookingsView();
+		}
+
+		void BtnDeleteBooking_Click(Object^ sender, EventArgs^ e) {
+			if (bookingsGrid->SelectedRows->Count == 0) {
+				MessageBox::Show("Please select a booking to delete.", "Nothing Selected", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
+			}
+
+			String^ sessionId = bookingsGrid->SelectedRows[0]->Cells[0]->Value->ToString();
+			String^ sql = "DELETE FROM sessions WHERE session_id = " + sessionId;
+			RunNonQuery(sql);
+
+			MessageBox::Show("Booking deleted.", "ZenBar", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			LoadBookingsView();
+		}
+
+		void BtnUpdateBooking_Click(Object^ sender, EventArgs^ e) {
+			if (bookingsGrid->SelectedRows->Count == 0) {
+				MessageBox::Show("Please select a booking to update.", "Nothing Selected", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
+			}
+			if (cmbClass->SelectedIndex == -1) {
+				MessageBox::Show("Please select a new package from the dropdown.", "Missing Info", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				return;
+			}
+
+			String^ sessionId = bookingsGrid->SelectedRows[0]->Cells[0]->Value->ToString();
+			String^ selected = cmbClass->SelectedItem->ToString();
+
+			int parenIndex = selected->IndexOf("(Rs.");
+			String^ className = selected->Substring(0, parenIndex)->Trim();
+			String^ sessionTime = dtpBookingTime->Value.ToString("ddd, hh:mm tt");
+
+			String^ sql = "UPDATE sessions SET class_type = '" + className->Replace("'", "''") +
+				"', session_time = '" + sessionTime->Replace("'", "''") +
+				"' WHERE session_id = " + sessionId;
+
+			RunNonQuery(sql);
+
+			MessageBox::Show("Booking updated.", "ZenBar", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			LoadBookingsView();
 		}
 
 		// ==========================================
@@ -627,6 +737,8 @@ namespace ZenBarApp {
 			formPanel->Controls->Add(btnUpdate);
 			formPanel->Controls->Add(btnDelete);
 			btnAdd->Click += gcnew EventHandler(this, &DashboardForm::BtnAddOrder_Click);
+			btnDelete->Click += gcnew EventHandler(this, &DashboardForm::BtnDeleteOrder_Click);
+			btnUpdate->Click += gcnew EventHandler(this, &DashboardForm::BtnUpdateOrder_Click);
 
 			ordersGrid = gcnew DataGridView();
 			ordersGrid->Location = Point(320, 20);
@@ -689,9 +801,9 @@ namespace ZenBarApp {
 			lblCust->Location = Point(15, 55);
 			lblCust->AutoSize = true;
 
-			TextBox^ txtOrderCust = gcnew TextBox();
-			txtOrderCust->Location = Point(15, 75);
-			txtOrderCust->Size = System::Drawing::Size(235, 25);
+			txtBookingCust = gcnew TextBox();
+			txtBookingCust->Location = Point(15, 75);
+			txtBookingCust->Size = System::Drawing::Size(235, 25);
 
 			Label^ lblClass = gcnew Label();
 			lblClass->Text = L"Select Studio Package:";
@@ -710,9 +822,9 @@ namespace ZenBarApp {
 			lblTime->Location = Point(15, 175);
 			lblTime->AutoSize = true;
 
-			DateTimePicker^ dtpTime = gcnew DateTimePicker();
-			dtpTime->Location = Point(15, 195);
-			dtpTime->Size = System::Drawing::Size(235, 25);
+			dtpBookingTime = gcnew DateTimePicker();
+			dtpBookingTime->Location = Point(15, 195);
+			dtpBookingTime->Size = System::Drawing::Size(235, 25);
 
 			Button^ btnAdd = gcnew Button();
 			btnAdd->Text = L"+ Add Booking";
@@ -741,30 +853,53 @@ namespace ZenBarApp {
 
 			formPanel->Controls->Add(lblFormTitle);
 			formPanel->Controls->Add(lblCust);
-			formPanel->Controls->Add(txtOrderCust);
+			formPanel->Controls->Add(txtBookingCust);
 			formPanel->Controls->Add(lblClass);
 			formPanel->Controls->Add(cmbClass);
 			formPanel->Controls->Add(lblTime);
-			formPanel->Controls->Add(dtpTime);
+			formPanel->Controls->Add(dtpBookingTime);
 			formPanel->Controls->Add(btnAdd);
 			formPanel->Controls->Add(btnUpdate);
 			formPanel->Controls->Add(btnDelete);
+			btnAdd->Click += gcnew EventHandler(this, &DashboardForm::BtnAddBooking_Click);
+			btnDelete->Click += gcnew EventHandler(this, &DashboardForm::BtnDeleteBooking_Click);
+			btnUpdate->Click += gcnew EventHandler(this, &DashboardForm::BtnUpdateBooking_Click);
 
-			DataGridView^ grid = gcnew DataGridView();
-			grid->Location = Point(320, 20);
-			grid->Size = System::Drawing::Size(530, 565);
-			grid->BackgroundColor = Color::White;
-			grid->ColumnCount = 4;
-			grid->Columns[0]->Name = L"Booking ID";
-			grid->Columns[1]->Name = L"Customer";
-			grid->Columns[2]->Name = L"Package Session";
-			grid->Columns[3]->Name = L"Date & Time";
-			grid->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
+			bookingsGrid = gcnew DataGridView();
+			bookingsGrid->Location = Point(320, 20);
+			bookingsGrid->Size = System::Drawing::Size(530, 565);
+			bookingsGrid->BackgroundColor = Color::White;
+			bookingsGrid->ColumnCount = 4;
+			bookingsGrid->Columns[0]->Name = L"Booking ID";
+			bookingsGrid->Columns[1]->Name = L"Customer";
+			bookingsGrid->Columns[2]->Name = L"Package Session";
+			bookingsGrid->Columns[3]->Name = L"Date & Time";
+			bookingsGrid->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
 
-			grid->Rows->Add(L"BKG-201", L"Emma Watson", L"Vinyasa Flow Yoga", L"Sat, 10:00 AM");
+			MySqlConnection^ conn = gcnew MySqlConnection(connStr);
+			try {
+				conn->Open();
+				MySqlCommand^ cmd = gcnew MySqlCommand("SELECT session_id, customer_name, class_type, session_time FROM sessions", conn);
+				MySqlDataReader^ reader = cmd->ExecuteReader();
+				while (reader->Read()) {
+					bookingsGrid->Rows->Add(
+						reader["session_id"]->ToString(),
+						reader["customer_name"]->ToString(),
+						reader["class_type"]->ToString(),
+						reader["session_time"]->ToString()
+					);
+				}
+				reader->Close();
+			}
+			catch (Exception^ ex) {
+				MessageBox::Show("Could not load bookings: " + ex->Message, "ZenBar DB Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+			}
+			finally {
+				conn->Close();
+			}
 
 			contentHost->Controls->Add(formPanel);
-			contentHost->Controls->Add(grid);
+			contentHost->Controls->Add(bookingsGrid);
 		}
 
 		// Navigation Handlers
