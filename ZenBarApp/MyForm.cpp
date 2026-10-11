@@ -1,4 +1,4 @@
-#include "MyForm.h"
+#include "LoginForm.h"  // include your new login form
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -7,7 +7,8 @@ using namespace System::Windows::Forms;
 int main(array<String^>^ args) {
     Application::EnableVisualStyles();
     Application::SetCompatibleTextRenderingDefault(false);
-    ZenBarApp::MyForm form;
-    Application::Run(% form);
+
+    ZenBarApp::LoginForm loginForm;  // Launch the login form first!
+    Application::Run(% loginForm);
     return 0;
 }
