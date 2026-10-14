@@ -111,8 +111,8 @@ namespace ZenBarApp {
 			// Sidebar Panel
 			// 
 			this->sidebarPanel->Dock = System::Windows::Forms::DockStyle::Left;
-			this->sidebarPanel->Size = System::Drawing::Size(220, 680);
-			this->sidebarPanel->BackColor = Color::FromArgb(38, 50, 42); // Deep Sage Green
+			this->sidebarPanel->Size = System::Drawing::Size(230, 680);
+			this->sidebarPanel->BackColor = Color::FromArgb(34, 48, 39); // Deep Sage Green
 
 			// Brand Header
 			Label^ lblBrand = gcnew Label();
@@ -124,16 +124,16 @@ namespace ZenBarApp {
 			this->sidebarPanel->Controls->Add(lblBrand);
 
 			// Sidebar Navigation
-			this->btnHome = CreateNavButton(L"  Dashboard", 110);
+			this->btnHome = CreateNavButton(L"  Dashboard", 125);
 			this->btnHome->Click += gcnew EventHandler(this, &DashboardForm::BtnHome_Click);
 
-			this->btnMenu = CreateNavButton(L"  Menu & Catalog", 165);
+			this->btnMenu = CreateNavButton(L"  Menu & Catalog", 185);
 			this->btnMenu->Click += gcnew EventHandler(this, &DashboardForm::BtnMenu_Click);
 
-			this->btnOrders = CreateNavButton(L"  Orders Queue", 220);
+			this->btnOrders = CreateNavButton(L"  Orders Queue", 245);
 			this->btnOrders->Click += gcnew EventHandler(this, &DashboardForm::BtnOrders_Click);
 
-			this->btnBookings = CreateNavButton(L"  Bookings Queue", 275);
+			this->btnBookings = CreateNavButton(L"  Bookings Queue", 305);
 			this->btnBookings->Click += gcnew EventHandler(this, &DashboardForm::BtnBookings_Click);
 
 			this->btnLogout = CreateNavButton(L"  Log Out", 600);
@@ -149,9 +149,9 @@ namespace ZenBarApp {
 			// 
 			// Header Panel
 			// 
-			this->headerPanel->Location = Point(220, 0);
+			this->headerPanel->Location = Point(230, 0);
 			this->headerPanel->Size = System::Drawing::Size(880, 70);
-			this->headerPanel->BackColor = Color::White;
+			this->headerPanel->BackColor = Color::FromArgb(250, 251, 249);
 
 			this->lblTitle->Text = L"Dashboard";
 			this->lblTitle->Font = gcnew Drawing::Font(L"Segoe UI", 16, FontStyle::Bold);
@@ -176,7 +176,7 @@ namespace ZenBarApp {
 			// 
 			// Content Host Panel
 			// 
-			this->contentHost->Location = Point(220, 70);
+			this->contentHost->Location = Point(230, 70);
 			this->contentHost->Size = System::Drawing::Size(880, 610);
 			this->contentHost->BackColor = Color::FromArgb(246, 248, 245);
 
@@ -193,9 +193,10 @@ namespace ZenBarApp {
 			Button^ btn = gcnew Button();
 			btn->Text = text;
 			btn->Location = Point(10, topLocation);
-			btn->Size = System::Drawing::Size(200, 45);
+			btn->Size = System::Drawing::Size(200, 48);
 			btn->FlatStyle = FlatStyle::Flat;
 			btn->FlatAppearance->BorderSize = 0;
+			btn->FlatAppearance->MouseOverBackColor = Color::FromArgb(65, 96, 73);
 			btn->BackColor = Color::FromArgb(38, 50, 42);
 			btn->ForeColor = Color::FromArgb(200, 210, 202);
 			btn->Font = gcnew Drawing::Font(L"Segoe UI", 10, FontStyle::Regular);
@@ -375,33 +376,131 @@ namespace ZenBarApp {
 			lblTitle->Text = "Dashboard Overview";
 			contentHost->Controls->Clear();
 
-			Panel^ welcomeCard = gcnew Panel();
-			welcomeCard->Location = Point(30, 20);
-			welcomeCard->Size = System::Drawing::Size(820, 120);
-			welcomeCard->BackColor = Color::FromArgb(235, 243, 235);
+			// ===== HERO / WELCOME SECTION =====
+			Panel^ hero = gcnew Panel();
+			hero->Location = Point(30, 20);
+			hero->Size = System::Drawing::Size(820, 125);
+			hero->BackColor = Color::FromArgb(72, 105, 80);
 
 			Label^ lblWelcome = gcnew Label();
-			lblWelcome->Text = L"Welcome Back, Shop Owner! ✨";
-			lblWelcome->Font = gcnew Drawing::Font(L"Segoe UI", 15, FontStyle::Bold);
-			lblWelcome->ForeColor = Color::FromArgb(38, 50, 42);
+			lblWelcome->Text = L"Welcome Back ✨";
+			lblWelcome->Font = gcnew Drawing::Font(L"Segoe UI", 20, FontStyle::Bold);
+			lblWelcome->ForeColor = Color::White;
 			lblWelcome->Location = Point(25, 20);
 			lblWelcome->AutoSize = true;
 
-			Label^ lblQuote = gcnew Label();
-			lblQuote->Text = L"\"Small steps count. A little care goes a long way for mind & body.\"";
-			lblQuote->Font = gcnew Drawing::Font(L"Segoe UI", 9.5f, FontStyle::Italic);
-			lblQuote->ForeColor = Color::FromArgb(70, 90, 75);
-			lblQuote->Location = Point(25, 62);
-			lblQuote->AutoSize = true;
+			Label^ lblSub = gcnew Label();
+			lblSub->Text = L"Manage your wellness café, orders and yoga sessions with ease.";
+			lblSub->Font = gcnew Drawing::Font(L"Segoe UI", 10.5f);
+			lblSub->ForeColor = Color::FromArgb(225, 235, 225);
+			lblSub->Location = Point(27, 65);
+			lblSub->AutoSize = true;
 
-			welcomeCard->Controls->Add(lblWelcome);
-			welcomeCard->Controls->Add(lblQuote);
+			hero->Controls->Add(lblWelcome);
+			hero->Controls->Add(lblSub);
 
-			Panel^ cardMenu = CreateDashboardCard(30, 155, "Menu & Interactive Shop", "Browse matcha, juices & packages, and add directly to cart.", "Open Shop →", gcnew EventHandler(this, &DashboardForm::BtnMenu_Click));
-			Panel^ cardOrders = CreateDashboardCard(445, 155, "Cafe Orders POS Queue", "Manage active orders, update status or delete completed ones.", "Manage Orders →", gcnew EventHandler(this, &DashboardForm::BtnOrders_Click));
-			Panel^ cardBookings = CreateDashboardCard(30, 375, "Yoga Studio Bookings", "View scheduled sessions and manage class slots.", "Manage Bookings →", gcnew EventHandler(this, &DashboardForm::BtnBookings_Click));
 
-			contentHost->Controls->Add(welcomeCard);
+			// ===== QUICK STATS =====
+			Panel^ stat1 = gcnew Panel();
+			stat1->Location = Point(30, 165);
+			stat1->Size = System::Drawing::Size(250, 90);
+			stat1->BackColor = Color::White;
+
+			Label^ stat1Title = gcnew Label();
+			stat1Title->Text = "6";
+			stat1Title->Font = gcnew Drawing::Font(L"Segoe UI", 22, FontStyle::Bold);
+			stat1Title->ForeColor = Color::FromArgb(65, 96, 73);
+			stat1Title->Location = Point(20, 12);
+			stat1Title->AutoSize = true;
+
+			Label^ stat1Text = gcnew Label();
+			stat1Text->Text = "Wellness Products";
+			stat1Text->Font = gcnew Drawing::Font(L"Segoe UI", 9.5f);
+			stat1Text->ForeColor = Color::Gray;
+			stat1Text->Location = Point(22, 55);
+			stat1Text->AutoSize = true;
+
+			stat1->Controls->Add(stat1Title);
+			stat1->Controls->Add(stat1Text);
+
+
+			Panel^ stat2 = gcnew Panel();
+			stat2->Location = Point(315, 165);
+			stat2->Size = System::Drawing::Size(250, 90);
+			stat2->BackColor = Color::White;
+
+			Label^ stat2Title = gcnew Label();
+			stat2Title->Text = "24/7";
+			stat2Title->Font = gcnew Drawing::Font(L"Segoe UI", 22, FontStyle::Bold);
+			stat2Title->ForeColor = Color::FromArgb(65, 96, 73);
+			stat2Title->Location = Point(20, 12);
+			stat2Title->AutoSize = true;
+
+			Label^ stat2Text = gcnew Label();
+			stat2Text->Text = "Mind & Body Focus";
+			stat2Text->Font = gcnew Drawing::Font(L"Segoe UI", 9.5f);
+			stat2Text->ForeColor = Color::Gray;
+			stat2Text->Location = Point(22, 55);
+			stat2Text->AutoSize = true;
+
+			stat2->Controls->Add(stat2Title);
+			stat2->Controls->Add(stat2Text);
+
+
+			Panel^ stat3 = gcnew Panel();
+			stat3->Location = Point(600, 165);
+			stat3->Size = System::Drawing::Size(250, 90);
+			stat3->BackColor = Color::White;
+
+			Label^ stat3Title = gcnew Label();
+			stat3Title->Text = "6";
+			stat3Title->Font = gcnew Drawing::Font(L"Segoe UI", 22, FontStyle::Bold);
+			stat3Title->ForeColor = Color::FromArgb(65, 96, 73);
+			stat3Title->Location = Point(20, 12);
+			stat3Title->AutoSize = true;
+
+			Label^ stat3Text = gcnew Label();
+			stat3Text->Text = "Wellness Experiences";
+			stat3Text->Font = gcnew Drawing::Font(L"Segoe UI", 9.5f);
+			stat3Text->ForeColor = Color::Gray;
+			stat3Text->Location = Point(22, 55);
+			stat3Text->AutoSize = true;
+
+			stat3->Controls->Add(stat3Title);
+			stat3->Controls->Add(stat3Text);
+
+
+			// ===== MAIN ACTION CARDS =====
+			Panel^ cardMenu = CreateDashboardCard(
+				30, 285,
+				"Explore Wellness Menu",
+				"Browse drinks, smoothies and wellness experiences.",
+				"Open Menu →",
+				gcnew EventHandler(this, &DashboardForm::BtnMenu_Click)
+			);
+
+			Panel^ cardOrders = CreateDashboardCard(
+				445, 285,
+				"Manage Orders",
+				"View and manage customer orders from the café.",
+				"View Orders →",
+				gcnew EventHandler(this, &DashboardForm::BtnOrders_Click)
+			);
+
+			Panel^ cardBookings = CreateDashboardCard(
+				30, 470,
+				"Yoga & Meditation",
+				"Manage upcoming wellness sessions and bookings.",
+				"View Bookings →",
+				gcnew EventHandler(this, &DashboardForm::BtnBookings_Click)
+			);
+
+
+			// ===== ADD EVERYTHING =====
+			contentHost->Controls->Add(hero);
+			contentHost->Controls->Add(stat1);
+			contentHost->Controls->Add(stat2);
+			contentHost->Controls->Add(stat3);
 			contentHost->Controls->Add(cardMenu);
 			contentHost->Controls->Add(cardOrders);
 			contentHost->Controls->Add(cardBookings);
@@ -410,27 +509,28 @@ namespace ZenBarApp {
 		Panel^ CreateDashboardCard(int x, int y, String^ title, String^ desc, String^ btnText, EventHandler^ handler) {
 			Panel^ card = gcnew Panel();
 			card->Location = Point(x, y);
-			card->Size = System::Drawing::Size(405, 200);
+			card->Size = System::Drawing::Size(405, 175);
 			card->BackColor = Color::White;
+			card->BorderStyle = BorderStyle::None;
 
 			Label^ lblT = gcnew Label();
 			lblT->Text = title;
 			lblT->Font = gcnew Drawing::Font(L"Segoe UI", 12, FontStyle::Bold);
 			lblT->ForeColor = Color::FromArgb(38, 50, 42);
-			lblT->Location = Point(20, 20);
+			lblT->Location = Point(25, 18);
 			lblT->AutoSize = true;
 
 			Label^ lblD = gcnew Label();
 			lblD->Text = desc;
 			lblD->Font = gcnew Drawing::Font(L"Segoe UI", 9.0f);
 			lblD->ForeColor = Color::Gray;
-			lblD->Location = Point(20, 52);
+			lblD->Location = Point(25, 52);
 			lblD->Size = System::Drawing::Size(365, 45);
 
 			Button^ btn = gcnew Button();
 			btn->Text = btnText;
-			btn->Location = Point(20, 125);
-			btn->Size = System::Drawing::Size(160, 38);
+			btn->Location = Point(20, 90);
+			btn->Size = System::Drawing::Size(180, 42);
 			btn->BackColor = Color::FromArgb(65, 96, 73);
 			btn->ForeColor = Color::White;
 			btn->FlatStyle = FlatStyle::Flat;
@@ -573,7 +673,7 @@ namespace ZenBarApp {
 			card->Location = Point(x, y);
 			card->Size = System::Drawing::Size(260, 215);
 			card->BackColor = Color::White;
-			card->BorderStyle = BorderStyle::FixedSingle;
+			card->BorderStyle = BorderStyle::None;
 
 			Panel^ imgBox = gcnew Panel();
 			imgBox->Location = Point(10, 10);
